@@ -5,4 +5,8 @@ Code for SIGGRAPH 2025 (ToG) paper "Bernstein Bounds for Caustics"
 
 ## Reproduce
 
-Fig. 09: `2d/fig09`. Run `run_main_top/bottom.py`. You can choose the `_latex` variant to generate the paper figure, which however needs a latex environment. 
+- Fig. 09: `2d/fig09`. Run `run_main_top/bottom.py`. You can choose the `_latex` variant to generate the paper figure, which however needs a latex environment. 
+
+    - To visualize the computation process of Bernstein polynomials, please try `2d/mid/run_main.py`.
+
+![result](2d/mid/result.png)
