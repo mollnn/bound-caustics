@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.6.0">
+    <default name="lightPosition_x" value="3.0" />
+    <default name="lightPosition_y" value="1.0" />
+    <default name="lightPosition_z" value="4.0" />
+	<default name="useResultant" value="false" />
+	<default name="methodMask" value="0" />
+	<default name="distrPath" value=""/>
+	<default name="timeout" value="99999"/>
+	<default name="spp" value="9999"/>
+	<default name="distr_min" value="0.000001"/>
+	<default name="distr_max" value="1"/>
+	<default name="spec_var" value="0.0001"/>
+	<default name="force_gamma" value="100"/>  
+    <!-- 200 -->
+	<default name="force_sample" value="0"/>
+	<default name="use_max_var" value="true"/>
+	<default name="integrator" value="path_cuts_path"/>
+	<default name="initialRadius" value="0.002"/>
+    <default name="AR" value="2"/>
+    <default name="Am" value="1e-12"/>
+    <default name="AM" value="1e3"/>
+    <default name="INF_AREA_TOL" value="0.0001"/>
+    <default name="u1TOLERATE" value="0.5"/>
+    <default name="U1T" value="0.0001"/>
+    <default name="res" value="512"/>
+    <default name="SHADING_NORMAL" value="true"/>
+    <default name="SHADING_NORMAL2" value="true"/>
+    <default name="CHAIN_TYPE" value="1"/>
+    <default name="dump_bound" value="0"/>
+	<integrator type="$integrator">
+		<integer name="sampleCount" value="$spp"/>
+		<integer name="timeout" value="$timeout"/>
+		<integer name="maxDepth" value="10"/>
+		<integer name="rrDepth" value="10"/>
+		<boolean name="useResultant" value="$useResultant"/>
+		<integer name="methodMask" value="$methodMask"/>
+		<integer name="pathcutBounce" value="1"/>
+		<integer name="cutoffMatrix" value="16"/>
+		<integer name="cutoffResultant" value="100"/>
+		<float name="pathcutThres" value="0.00001"/>
+        <string name="distrPath" value="$distrPath"/>
+        <string name="budgetType" value="seconds"/>
+        <string name="nee" value="always"/>
+        <float name="budget" value="$timeout"/>
+        <integer name="maxPasses" value="$spp"/>
+		<float name="initialRadius" value="$initialRadius"/>
+        <float name="distr_min" value="$distr_min"/>
+        <float name="distr_max" value="$distr_max"/>
+        <float name="spec_var" value="$spec_var"/>
+        <float name="force_gamma" value="$force_gamma"/>
+        <integer name="force_sample" value="$force_sample"/>
+        <boolean name="use_max_var" value="$use_max_var"/>
+        <float name="AR" value="$AR"/>
+        <float name="Am" value="$Am"/>
+        <float name="AM" value="$AM"/>
+        <float name="INF_AREA_TOL" value="$INF_AREA_TOL"/>
+        <float name="u1TOLERATE" value="$u1TOLERATE"/>
+        <float name="U1T" value="$U1T"/>
+        <integer name="res" value="$res"/>
+        <boolean name="SHADING_NORMAL" value="$SHADING_NORMAL"/>
+        <boolean name="SHADING_NORMAL2" value="$SHADING_NORMAL2"/>
+        <boolean name="manifoldPerturbation" value="true"/>
+        <integer name="CHAIN_TYPE" value="$CHAIN_TYPE"/>
+        <integer name="dump_bound" value="$dump_bound"/>
+        <float name="lightPosition_x" value="$lightPosition_x"/>
+        <float name="lightPosition_y" value="$lightPosition_y"/>
+        <float name="lightPosition_z" value="$lightPosition_z"/>
+	</integrator>
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="x"/>
+		<float name="nearClip" value="0.1"/>
+        <float name="fov" value="44"/>
+
+        <transform name="toWorld">
+            <rotate x="0.0" y="1.0" z="0.0" angle="180.00"/>
+            <rotate x="1.0" y="0.0" z="0.0" angle="-62.58"/>
+            <rotate x="0.0" y="1.0" z="0.0" angle="52.07"/>
+            <rotate x="0.0" y="0.0" z="1.0" angle="-0.73"/>
+            <translate x="2.709096" y="4.605110" z="1.895111"/>
+        </transform>
+
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="$spp"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="height" value="720"/>
+			<integer name="width" value="1280"/>
+			<!-- <integer name="cropOffsetX" value="640"/> -->
+			<!-- <integer name="cropOffsetY" value="300"/> -->
+			<!-- <integer name="cropWidth" value="640"/> -->
+			<!-- <integer name="cropHeight" value="16"/> -->
+			<rfilter type="box"/>
+			<boolean name="banner" value="false"/>
+	</film>
+	</sensor>
+
+
+    <shape type="obj">
+        <string name="filename" value="../../data/plane130k.obj"/>
+        <!-- <string name="filename" value="../../data/plane5k.obj"/> -->
+        <bsdf type="conductor">
+			<string name="material" value="Au"/>
+        </bsdf>
+    </shape>
+
+
+	<shape type="rectangle">
+        <bsdf type="diffuse">
+            <texture name="reflectance" type="bitmap">
+                <string name="filename" value="textures/[2K]Tiles71/Tiles71_col.jpg"/>
+                <float name="uscale" value="3"/>
+                <float name="vscale" value="3"/>
+            </texture>
+        </bsdf>
+		<transform name="toWorld">
+			<scale value="3"/>
+			<rotate x="1" y="0" z="0" angle="-90"/>
+		</transform>
+
+    </shape>
+
+    <emitter type="point">
+        <spectrum name="intensity" value="50"/>
+        <boolean name="caustic_emitter_multi" value="true"/>
+        <transform name="toWorld">
+            <translate x="$lightPosition_x" y="$lightPosition_y" z="$lightPosition_z"/>
+        </transform>
+    </emitter>
+
+    <!-- <shape type="rectangle">
+		<emitter type="area">
+			<spectrum name="radiance" value="10000"/>
+		</emitter>  
+		<transform name="toWorld">
+			<scale value="-0.03"/>
+			<translate x="3" y="1" z="4"/>
+		</transform>
+	</shape>  -->
+</scene>

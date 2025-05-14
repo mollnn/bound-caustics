@@ -1,0 +1,117 @@
+% Generates an image node with the given size and position.
+% Arguments: width, height, filename, name, anchor
+\newcommand{\makeimagenode}[5]{
+    \node[anchor=north west, minimum width=#1, minimum height=#2, inner sep=0, outer sep=0] (#4) at #5 {};
+    \node[anchor=north west, minimum width=#1, minimum height=#2, inner sep=0, outer sep=0] (#4-content) at #5 {\includegraphics[width=#1, height=#2]{#3}};
+}
+
+% Generates an image node with the given size and position.
+% Clips a small portion of the content so when putting a frame around the image it does not flicker.
+% Arguments: width, height, filename, name, anchor, color, linewidth
+\newcommand{\makeframedimagenode}[7]{
+    \node[anchor=north west, minimum width=#1, minimum height=#2, inner sep=0, outer sep=0] (#4) at #5 {};
+    \begin{scope}
+        \clip
+            ([xshift = #7 * 0.5, yshift = #7 * 0.5]#4.south west)
+            rectangle
+            ([xshift = -#7 * 0.5, yshift = -#7 * 0.5]#4.north east);
+
+        \node[anchor=north west, minimum width=#1, minimum height=#2, inner sep=0, outer sep=0] (#4-content) at #5 {\includegraphics[width=#1, height=#2]{#3}};
+    \end{scope}
+    \node[anchor=center, minimum width=#1-#7, minimum height=#2-#7, inner sep=0, outer sep=0,
+        draw={#6}, line width=#7] (#4-frame) at (#4.center) {};
+}
+
+% Generates a node with text inside. The text is clipped to the node so it does not overlap
+% with other content.
+% Arguments: width, height, name, anchor, text color, fontsize, fill color, rotation, vertical alignment, horizontal alignment, vertical padding, horizontal padding, content
+\newcommand\maketextnode[9]{%
+    % We use garbage names because proper ones interfere randomly and unpredictably in a
+    % distribution-dependent way with some of the TikZ and LaTeX commands we use below
+    \def\myargA{#1}%
+    \def\myargB{#2}%
+    \def\myargC{#3}%
+    \def\myargD{#4}%
+    \def\myargE{#5}%
+    \def\myargF{#6}%
+    \def\myargG{#7}%
+    \def\myargH{#8}%
+    \def\myargI{#9}%
+    \maketextnodecontinued
+}
+\newcommand\maketextnodecontinued[4]{%
+    \ifx\myargG\empty
+    \node[anchor=north west, minimum width=\myargA, minimum height=\myargB, inner sep=0, outer sep=0] (\myargC) at \myargD {};
+    \else
+    \node[anchor=north west, minimum width=\myargA, minimum height=\myargB, inner sep=0, outer sep=0,fill={\myargG}] (\myargC) at \myargD {};
+    \fi
+
+    \begin{scope}
+        \clip (\myargC.south west) rectangle (\myargC.north east);
+        \node[anchor=center, minimum width=\myargA, minimum height=\myargB, rotate=\myargH, text={\myargE},
+            inner sep=0, outer sep=0] at (\myargC.center)
+        {
+            \begin{minipage}[c][\myargB-#2-#2][\myargI]{\myargA-#3-#3} \fontsize{\myargF}{\myargF} \selectfont #1
+                #4\strut
+            \end{minipage}
+        };
+    \end{scope}
+}
+
+% Generates a node with text inside. The text is clipped to the node so it does not overlap
+% with other content. Width and height of the innermost node are flipped, use this for rotated text.
+% Arguments: width, height, name, anchor, text color, fontsize, content, fill color, rotation, vertical alignment, horizontal alignment, vertical padding, horizontal padding
+\newcommand\maketextnodeflipped[9]{%
+    % We use garbage names because proper ones interfere randomly and unpredictably in a
+    % distribution-dependent way with some of the TikZ and LaTeX commands we use below
+    \def\myargA{#1}%
+    \def\myargB{#2}%
+    \def\myargC{#3}%
+    \def\myargD{#4}%
+    \def\myargE{#5}%
+    \def\myargF{#6}%
+    \def\myargG{#7}%
+    \def\myargH{#8}%
+    \def\myargI{#9}%
+    \maketextnodeflippedcontinued
+}
+\newcommand\maketextnodeflippedcontinued[4]{%
+    \ifx\myargG\empty
+    \node[anchor=north west, minimum width=\myargA, minimum height=\myargB, inner sep=0, outer sep=0] (\myargC) at \myargD {};
+    \else
+    \node[anchor=north west, minimum width=\myargA, minimum height=\myargB, inner sep=0, outer sep=0,fill={\myargG}] (\myargC) at \myargD {};
+    \fi
+
+    \begin{scope}
+        \clip (\myargC.south west) rectangle (\myargC.north east);
+        \node[anchor=center, minimum width=\myargA, minimum height=\myargB, rotate=\myargH, text={\myargE},
+            inner sep=0, outer sep=0] at (\myargC.center)
+        {
+            \begin{minipage}[c][\myargA-#3-#3][\myargI]{\myargB-#2-#2} \fontsize{\myargF}{\myargF} \selectfont #1
+                #4\strut
+            \end{minipage}
+        };
+    \end{scope}
+}
+
+% Generates a rectangle marker (outline, no fill)
+% Arguments: width, height, anchor, color, linewidth, linestyle (dashed or solid)
+\newcommand{\makerectangle}[6]{
+    \node[anchor=north west, minimum width=#1, minimum height=#2, draw={#4}, line width=#5, #6,
+        inner sep=0, outer sep=0] () at #3 {};
+}
+
+% Draws a line on top of another node, clipped to never leave the node
+% Arguments: parent node name, start, end, line width, line color
+\newcommand{\makeclippedline}[5]{
+    \begin{scope}
+        \clip (#1.south west) rectangle (#1.north east);
+        \draw[color={#5}, line width=#4] #2 -- #3;
+    \end{scope}
+}
+
+% Generates an empty node (no fill, no draw) to enforce a minimum size for the full tikzpicture
+% Arguments: width, height, anchor, name
+\newcommand{\makebackgroundnode}[4]{
+    \node[anchor=north west, minimum width=#1, minimum height=#2, inner sep=0, outer sep=0] (#4) at #3 {};
+}
