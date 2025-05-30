@@ -10,7 +10,7 @@ Code for SIGGRAPH 2025 (ToG) paper "Bernstein Bounds for Caustics"
 
 The implementation includes the precomputation end and the rendering end. 
 
-- Precomputation: We have Python implementation for all cases, which is easy to run. Only single scattering case has C++ implementation. Double scattering is speeded up using Numba. 
+- Precomputation: We have Python implementation for all cases, which is easy to run. Only single scattering case has C++ implementation (integrated in mitsuba). Double scattering is speeded up using Numba (`batch/`). 
 
 - Rendering: We based on the code of specular polynomials. I copied the building instructions below:
 
@@ -25,7 +25,7 @@ The implementation includes the precomputation end and the rendering end.
 
 ## Reproduce
 
-I plan to release code for almost all figures this time. Unfortunately, some experiments rely on local code modifications, so put them all together needs time.
+I plan to release code for almost all figures this time. Unfortunately, some experiments rely on local code modifications, so putting them all together needs time.
 
 - **Fig. 09: demonstration of how to convert position/irradiance bounds into distributions.** In the directory `2d/fig09`, run `run_main_top/bottom.py`. You can choose the `_latex` variant to generate the paper figure, which however needs a latex environment. 
 
